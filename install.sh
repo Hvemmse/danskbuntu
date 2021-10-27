@@ -8,9 +8,9 @@ sudo apt clean
 sudo apt update
 
 # Hent onlyoffice
-wget http://download.onlyoffice.com/install/opensource-install.sh
+snap install onlyoffice-desktopeditors
 # Installer Onlyoffice
-sudo bash opensource-install.sh -ims false
+
 # Installer timeshift til backup af system Chromium som Internet browser 
 # Terminator som terminal Hardinfo som systeminfo Scribus som Illustrator eller MS Publisher gimp i stedet for Photoshop 
 # Gnome Tweaks og Grub Customizer for at redigere Gnome og Grub 
