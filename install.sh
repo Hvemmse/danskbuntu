@@ -36,7 +36,7 @@ echo "deb http://deb.anydesk.com/ all main" | sudo tee /etc/apt/sources.list.d/a
 # Finally update apt cache and install the latest release of AnyDesk on Ubuntu 20.04/18.04 Linux.
 
 sudo apt update
-sudo apt install anydesk
+sudo apt install anydesk libpangox-1.0-0
 
 # Slet firefox og thunderbird
 sudo apt remove firefox gnome-terminal thunderbird
