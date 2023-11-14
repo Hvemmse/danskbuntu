@@ -1,0 +1,46 @@
+
+
+add-apt-repository universe
+apt update && apt install -y debootstrap arch-install-scripts
+
+
+clear 
+lsblk -do NAME,MODEL,SIZE
+
+echo enter the driveletter /dev/sdx as a for x or b for x
+
+read part
+#part="/dev/sda" 
+
+
+sudo sgdisk -og $1 ${part}
+sudo sgdisk -n 1:2048:4095 -c 1:"BIOS Boot Partition" -t 1:ef02 $1 ${part}
+sudo sgdisk -n 2:4096:413695 -c 2:"EFI System Partition" -t 2:ef00 $1 ${part}
+sudo sgdisk -n 3:413696:823295 -c 3:"Linux /boot" -t 3:8300 $1 ${part}
+ENDSECTOR=`sgdisk -E $1`
+sudo sgdisk -n 4:823296:$ENDSECTOR -c 4:"Linux" -t 4:8300 $1 ${part}
+sudo sgdisk -p $1 ${part}
+
+#format partitions
+sudo mkfs.fat -F32 ${part}2
+sudo mkfs.ext4 -F ${part}3
+sudo mkfs.ext4 -F ${part}4
+
+#mount partitions
+sudo mount ${part}4 /mnt
+sudo mkdir /mnt/boot
+sudo mkdir /mnt/boot/efi
+sudo mount ${part}2 /mnt/boot/efi
+
+dd if=/dev/zero of=/mnt/swapfile bs=1M count=512
+mkswap /mnt/swapfile
+chmod 600 /mnt/swapfile
+swapon /mnt/swapfile
+
+debootstrap focal /mnt https://mirror.leaseweb.com/ubuntu/
+
+genfstab -U /mnt >> /mnt/etc/fstab
+
+cp manninstallubuntu /mnt/root/
+
+arch-chroot /mnt
